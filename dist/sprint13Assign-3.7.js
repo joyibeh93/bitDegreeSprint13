@@ -14,16 +14,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fetch_1 = __importDefault(require("node-fetch"));
 ;
-const apiURL = 'https://jsonplaceholder.typicode.com/users';
-const fetchUsers = (url) => __awaiter(void 0, void 0, void 0, function* () {
+const isCustomerItem = (variableToCheck) => {
+    return variableToCheck.company !== undefined;
+};
+const userURL = 'https://jsonplaceholder.typicode.com/users';
+const albumURL = 'https://jsonplaceholder.typicode.com/albums/1/photos';
+const fetchData = (url) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield (0, node_fetch_1.default)(url).then(response => response.json());
-    return response.map((customer) => {
-        return {
-            id: customer.id,
-            name: customer.name,
-            street_address: `${customer.address.suite} ${customer.address.street}`,
-            company_name: customer.company.name
-        };
+    return response.map((info) => {
+        if (isCustomerItem(info)) {
+            return {
+                id: info.id,
+                name: info.name,
+                street_address: `${info.address.suite} ${info.address.street}`,
+                company_name: info.company.name
+            };
+        }
+        else {
+            return {
+                customer_id: info.id,
+                title: info.title
+            };
+        }
     });
 });
-fetchUsers(apiURL).then(users => console.log(users));
+fetchData(albumURL).then(albums => console.log(albums));
+fetchData(userURL).then(users => console.log(users));
